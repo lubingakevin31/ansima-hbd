@@ -1,0 +1,25 @@
+SITE D'ANNIVERSAIRE — ANSIMA (5 novembre) — tout le site est en anglais
+
+Ouvre index.html dans le navigateur. Garde tous les dossiers ensemble.
+
+FICHIERS A AJOUTER (noms en minuscules, exacts)
+  assets/videos/1.mp4                      video de bienvenue (apres "Enter"), a compresser (voir plus bas)
+  assets/videos/a.mp4 ... f.mp4            6 videos surprises
+  assets/audio/a.mp3 ... j.mp3             10 audios surprises (a, b, c, d, e, f, g, h, i, j)
+  assets/images/a.jpeg                     ecran d'accueil (deja la) + fond de la fin
+  assets/images/b.jpeg                     fond du haut de page
+  assets/images/c.jpeg                     section "How it works"
+  assets/images/d.jpeg                     section du jeu
+  assets/images/e.jpeg                     section du livre
+  assets/images/f.jpeg                     bandeau de citation
+  assets/images/2021.jpeg ... 2026.jpeg    section "Six years"
+
+LE JEU
+  7 questions. Bonne reponse -> elle choisit : ouvrir une surprise (video OU audio, tiree au hasard,
+  une seule) ou passer a la question suivante. A la fin, toutes les videos et tous les audios s'ouvrent.
+  Rien (surprises, histoire) ne s'ouvre avant d'avoir repondu a une premiere question.
+
+TEXTES : assets/js/content.js (accueil, questions, legendes des annees, livre EN/FR, mot de la fin).
+
+COMPRESSER LA VIDEO 1.mp4 (ffmpeg doit etre installe)
+  sh tools/compress-video.sh 1-original.mp4 assets/videos/1.mp4

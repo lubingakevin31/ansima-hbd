@@ -1,0 +1,209 @@
+<!-- index.html — Sections réorganisées avec animations directionnelles et découpes -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Happy birthday, Ansima</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <noscript><style>.splash,.introv{display:none!important}.rv,.rv-left,.rv-right,.rv-shine{opacity:1!important;transform:none!important}body.locked{overflow:auto}</style></noscript>
+</head>
+<body class="locked">
+
+  <!-- Opening screen -->
+  <div class="splash" id="splash">
+    <div class="splash-photo" id="splashPhoto"></div>
+    <div class="splash-shade" id="splashShade"></div>
+    <div class="splash-ui">
+      <button class="skip" id="skip">Skip</button>
+      <div class="splash-text" id="splashText" aria-live="polite"></div>
+      <button class="btn primary enter" id="enterBtn">Enter</button>
+    </div>
+  </div>
+
+  <!-- Welcome video -->
+  <div class="introv" id="introv" role="dialog" aria-modal="true" aria-label="Welcome video">
+    <div class="introbox">
+      <video id="bdayVideo" src="assets/videos/1.mp4" preload="auto" playsinline controls></video>
+      <div class="introbar">
+        <span id="introHint">Pause, replay, change the volume or go full screen, whatever you like.</span>
+        <button class="btn primary" id="introGo">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <a class="brand" href="#home">Ansima<span> · 05.11</span></a>
+    <nav aria-label="Sections">
+      <a href="#game">Game</a><a href="#years">Years</a><a href="#story">Story</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <svg class="bunting" id="bunting" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="wrap hero-in">
+        <p class="eyebrow rv">5 November 2026</p>
+        <h1 class="rv" style="--d:.1s">Happy birthday,<span class="script">Ansima</span></h1>
+        <p class="lead rv" style="--d:.2s">Seven questions, six years of you, and one story written for today. Answer a question and you can open a surprise, a video or a voice message picked at random. Finish the game and everything unlocks.</p>
+        <div class="actions rv" style="--d:.3s">
+          <a class="btn primary" href="#game">Start the game</a>
+          <a class="btn ghost light" href="#wish">Make a wish</a>
+        </div>
+        <ul class="facts rv" style="--d:.4s">
+          <li><b>7</b><span>questions</span></li>
+          <li><b data-fill="items">16</b><span>surprises</span></li>
+          <li><b>6</b><span>years, 2021–2026</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="sec" id="how">
+      <div class="wrap split">
+        <div class="rv-left">
+          <p class="eyebrow">01 · How it works</p>
+          <h2 class="h2">A birthday with<br>a few rules.</h2>
+          <ol class="steps">
+            <li><b>Answer a question.</b> One at a time, in order.</li>
+            <li><b>Choose.</b> Open a surprise, or move on to the next question.</li>
+            <li><b>It is random.</b> A video or a voice message. You will not know which until it opens.</li>
+            <li><b>Reach the end.</b> Every video and every voice message unlocks.</li>
+          </ol>
+          <p class="note">Nothing opens before you have played. The story unlocks after your first right answer.</p>
+        </div>
+        <figure class="photo rv-right" id="photoC" data-file="c.jpeg"><img loading="lazy" decoding="async" src="assets/images/c.jpeg" alt="Ansima"></figure>
+      </div>
+    </section>
+
+    <!-- Wish -->
+    <section class="sec tint" id="wish">
+      <div class="wrap split rev">
+        <div class="cakewrap rv-left" id="cakewrap">
+          <svg class="cake-svg" id="cake" viewBox="0 0 320 300" role="img" aria-label="Chocolate cake with five candles">
+            <ellipse cx="160" cy="276" rx="150" ry="14" fill="#e9e5df"/>
+            <ellipse cx="160" cy="270" rx="132" ry="10" fill="#fff"/>
+            <rect x="48" y="172" width="224" height="96" rx="12" fill="#4b2e22"/>
+            <rect x="48" y="172" width="224" height="26" rx="12" fill="#fff"/>
+            <g fill="#fff"><circle cx="62" cy="196" r="14"/><circle cx="90" cy="196" r="14"/><circle cx="118" cy="196" r="14"/><circle cx="146" cy="196" r="14"/><circle cx="174" cy="196" r="14"/><circle cx="202" cy="196" r="14"/><circle cx="230" cy="196" r="14"/><circle cx="258" cy="196" r="14"/></g>
+            <g fill="#c0212f"><circle cx="76" cy="222" r="5"/><circle cx="118" cy="222" r="5"/><circle cx="160" cy="222" r="5"/><circle cx="202" cy="222" r="5"/><circle cx="244" cy="222" r="5"/></g>
+            <rect x="48" y="240" width="224" height="9" fill="#1f7a4d"/>
+            <rect x="88" y="110" width="144" height="66" rx="12" fill="#6b4231"/>
+            <rect x="88" y="110" width="144" height="22" rx="11" fill="#fff"/>
+            <g fill="#fff"><circle cx="100" cy="130" r="12"/><circle cx="124" cy="130" r="12"/><circle cx="148" cy="130" r="12"/><circle cx="172" cy="130" r="12"/><circle cx="196" cy="130" r="12"/><circle cx="220" cy="130" r="12"/></g>
+            <rect x="88" y="154" width="144" height="7" fill="#c0212f"/>
+            <g id="candles"></g>
+          </svg>
+        </div>
+        <div class="rv-right">
+          <p class="eyebrow">02 · A wish</p>
+          <h2 class="h2">Close your eyes.<br>Make a wish.</h2>
+          <p class="muted">Five candles, one breath. Tap the cake or the button, and keep your wish to yourself.</p>
+          <button class="btn primary" id="blow" aria-pressed="false">Blow out the candles</button>
+          <p class="wishmsg hand" id="wishMsg" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game -->
+    <section class="sec" id="game">
+      <div class="wrap">
+        <p class="eyebrow rv">03 · The game</p>
+        <h2 class="h2 rv">Seven questions.</h2>
+        <div class="gamegrid">
+          <figure class="photo tall rv-left" id="photoD" data-file="d.jpeg"><img loading="lazy" decoding="async" src="assets/images/d.jpeg" alt="Ansima"></figure>
+          <div class="card rv-shine" id="gameCard" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Surprises -->
+    <section class="sec tint" id="surprises">
+      <div class="wrap">
+        <p class="eyebrow rv">04 · Your surprises</p>
+        <h2 class="h2 rv">Videos &amp; voice messages.</h2>
+        <p class="muted rv" id="vaultNote"></p>
+        <div class="tags rv-shine" id="tagGrid"></div>
+      </div>
+    </section>
+
+    <!-- Years -->
+    <section class="sec" id="years">
+      <div class="wrap">
+        <p class="eyebrow rv">05 · Six years</p>
+        <h2 class="h2 rv">You have come<br>a long way.</h2>
+        <div class="tl" id="tl"></div>
+        <blockquote class="becoming rv-shine">
+          <p id="yq"></p>
+          <cite id="yqBy"></cite>
+          <span class="script" id="yEnd"></span>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- Story / book (Effet Découpe) -->
+    <section class="sec story split-curtain" id="story">
+      <div class="wrap split">
+        <figure class="photo rv-left" id="photoE" data-file="e.jpeg"><img loading="lazy" decoding="async" src="assets/images/e.jpeg" alt="Ansima"></figure>
+        <div class="rv-right">
+          <p class="eyebrow">06 · The story</p>
+          <h2 class="h2">A book,<br>just for you.</h2>
+          <p class="muted">Open it, turn the pages, close it when you are done. It is available in English, and in the original French.</p>
+          <button class="bookcover" id="bookCard" aria-label="Open the book">
+            <span class="bc-title">Ansima</span>
+            <span class="bc-sub">A story for your birthday</span>
+            <span class="bc-lock" id="bookLock">Answer your first question to unlock</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote on photo -->
+    <section class="photoband" id="quoteBand">
+      <div class="wrap"><p class="quote rv-shine">May this year look like you:<br>bright, brave, and full of good pages.</p></div>
+    </section>
+
+    <!-- Finale -->
+    <section class="finale" id="finale">
+      <div class="wrap">
+        <p class="script big rv">Happy birthday, Ansima.</p>
+        <p class="closing rv" id="closing"></p>
+        <a class="btn primary rv" href="#home">Back to the top</a>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>Ansima · 05.11.2026</span><a href="#home">Top ↑</a></footer>
+
+  <!-- Player dialog -->
+  <dialog id="player" aria-labelledby="playerTitle">
+    <button class="close" id="playerClose" aria-label="Close">×</button>
+    <p class="eyebrow" id="playerKind"></p>
+    <h3 id="playerTitle"></h3>
+    <div id="playerBody"></div>
+  </dialog>
+
+  <!-- Book reader -->
+  <div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="The book">
+    <div class="rbar">
+      <div class="lang" role="group" aria-label="Language"><button id="langEn" class="on">EN</button><button id="langFr">FR</button></div>
+      <button class="rclose" id="readerClose" aria-label="Close the book">Close ×</button>
+    </div>
+    <div class="stage" id="stage"><div class="bk" id="bk"></div></div>
+    <div class="rnav">
+      <button class="btn ghost light" id="prevPage">← Previous</button>
+      <span id="pageInfo"></span>
+      <button class="btn ghost light" id="shutBook">Close the cover</button>
+      <button class="btn primary" id="nextPage">Next →</button>
+    </div>
+  </div>
+
+  <script src="assets/js/content.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
