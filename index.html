@@ -9,13 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- 5 type families: Script (Great Vibes) · Handwritten (Caveat) · Serif (Lora) · Modern sans (Inter) · Editorial (Cormorant Garamond) -->
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>document.documentElement.className+=" js"</script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <noscript><style>.splash,.introv{display:none!important}.rv{opacity:1!important;transform:none!important}body.locked{overflow:auto}</style></noscript>
+  <noscript><style>.splash,.introv,.brk{display:none!important}.rv{opacity:1!important;transform:none!important}body.locked{overflow:auto}</style></noscript>
 </head>
 <body class="locked">
   <div class="glow g1" aria-hidden="true"></div>
   <div class="glow g2" aria-hidden="true"></div>
- 
+
   <!-- Opening screen -->
   <div class="splash" id="splash">
     <div class="splash-photo" id="splashPhoto"></div>
@@ -26,7 +27,7 @@
       <button class="btn primary enter" id="enterBtn">Enter</button>
     </div>
   </div>
- 
+
   <!-- Welcome video -->
   <div class="introv" id="introv" role="dialog" aria-modal="true" aria-label="Welcome video">
     <div class="introbox">
@@ -37,21 +38,21 @@
       </div>
     </div>
   </div>
- 
+
   <header>
     <a class="brand" href="#home">Ansima<span> · 05.11</span></a>
     <nav aria-label="Sections">
       <a href="#game">Game</a><a href="#years">Years</a><a href="#story">Story</a>
     </nav>
   </header>
- 
+
   <main>
     <!-- Hero -->
     <section class="hero" id="home">
       <div class="hero-bg" aria-hidden="true"><span class="chip c1">+1 year of legend</span><span class="chip c2">Achievement unlocked</span></div>
       <svg class="bunting" id="bunting" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true"></svg>
       <div class="wrap hero-in">
-        <p class="eyebrow rv">5 November 2026</p>
+        <p class="eyebrow rv">5 November 2026 · Turning 20</p>
         <h1 class="rv" style="--d:.1s">Happy birthday,<span class="script">Ansima</span></h1>
         <p class="lead rv" style="--d:.2s">Seven questions, six years of you, and one story written for today. Answer a question and you can open a surprise, a video or a voice message picked at random. Finish the game and everything unlocks.</p>
         <div class="actions rv" style="--d:.3s">
@@ -65,7 +66,15 @@
         </ul>
       </div>
     </section>
- 
+
+    <!-- Break 1: the hero photo tears in two, left and right -->
+    <section class="brk" data-brk="tear-x" aria-hidden="true">
+      <div class="brk-pin">
+        <div class="brk-under"><p class="eyebrow">01</p><h2 class="brk-title">How it works</h2><span class="brk-rule"></span></div>
+        <div class="brk-half a"><div class="brk-face bgp"><p class="brk-kicker">5 November 2026</p><p class="brk-big">Let’s begin<span class="script">Ansima</span></p></div></div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section class="sec" id="how">
       <div class="wrap g g-how">
@@ -85,7 +94,7 @@
         </div>
       </div>
     </section>
- 
+
     <!-- Wish -->
     <section class="sec sky" id="wish">
       <div class="wrap g g-wish">
@@ -117,7 +126,15 @@
         </div>
       </div>
     </section>
- 
+
+    <!-- Break 2: the screen shines, then lifts away -->
+    <section class="brk" data-brk="shine" aria-hidden="true">
+      <div class="brk-pin">
+        <div class="brk-under"><p class="eyebrow">03</p><h2 class="brk-title">The game</h2><span class="brk-rule"></span></div>
+        <div class="brk-half a lift"><div class="brk-face skyf"><p class="brk-kicker">Wish made</p><p class="brk-big">Now,<span class="script">let’s play</span></p><span class="glare"></span></div></div>
+      </div>
+    </section>
+
     <!-- Game -->
     <section class="sec" id="game">
       <div class="wrap g g-game">
@@ -129,7 +146,7 @@
         <div class="card rv" id="gameCard" aria-live="polite"></div>
       </div>
     </section>
- 
+
     <!-- Surprises -->
     <section class="sec dark" id="surprises">
       <div class="wrap">
@@ -139,12 +156,27 @@
         <div class="tags" id="tagGrid"></div>
       </div>
     </section>
- 
+
+    <!-- Break 3: a chocolate screen tears in two, top and bottom -->
+    <section class="brk" data-brk="tear-y" aria-hidden="true">
+      <div class="brk-pin">
+        <div class="brk-under"><p class="eyebrow">05</p><h2 class="brk-title">Six years</h2><span class="brk-rule"></span></div>
+        <div class="brk-half a"><div class="brk-face choc"><p class="brk-kicker">Look back</p><p class="brk-big"><span class="outline">2021</span><span class="script">to</span><span class="outline">2026</span></p></div></div>
+      </div>
+    </section>
+
     <!-- Years -->
     <section class="sec" id="years">
       <div class="wrap">
         <div class="rv rv-l"><p class="eyebrow">05 · Six years</p>
         <h2 class="h2">You have come<br>a long way.</h2></div>
+        <div class="twenty rv">
+          <span class="n">20</span>
+          <div>
+            <p class="t1">You have reached 20.</p>
+            <p class="t2"><span class="script">Happy birthday, Ansima.</span> Look at the road you walked, from 2021 to 2026.</p>
+          </div>
+        </div>
         <div class="tl" id="tl"></div>
         <blockquote class="becoming rv">
           <p id="yq"></p>
@@ -153,7 +185,7 @@
         </blockquote>
       </div>
     </section>
- 
+
     <!-- Story / book -->
     <section class="sec sky" id="story">
       <div class="wrap g g-story">
@@ -170,12 +202,12 @@
         <div class="bd rv rv-r"><p class="muted">Open it, turn the pages, close it when you are done. It is available in English, and in the original French.</p></div>
       </div>
     </section>
- 
+
     <!-- Quote on photo -->
     <section class="photoband" id="quoteBand" data-split>
       <div class="wrap"><p class="quote rv">May this year look like you:<br>bright, brave, and full of good pages.</p></div>
     </section>
- 
+
     <!-- Finale -->
     <section class="finale" id="finale" data-split>
       <div class="wrap">
@@ -185,9 +217,9 @@
       </div>
     </section>
   </main>
- 
+
   <footer><span>Ansima · 05.11.2026</span><a href="#home">Top ↑</a></footer>
- 
+
   <!-- Player for opened surprises -->
   <dialog id="player" aria-labelledby="playerTitle">
     <button class="close" id="playerClose" aria-label="Close">×</button>
@@ -195,9 +227,9 @@
     <h3 id="playerTitle"></h3>
     <div id="playerBody"></div>
   </dialog>
- 
+
   <dialog id="lightbox" class="lb" aria-label="Photo"><button class="close" id="lbClose" aria-label="Close">×</button><img id="lbImg" alt=""></dialog>
- 
+
   <!-- Book reader -->
   <div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="The book">
     <div class="rbar">
@@ -212,7 +244,7 @@
       <button class="btn primary" id="nextPage">Next →</button>
     </div>
   </div>
- 
+
   <script src="assets/js/content.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
