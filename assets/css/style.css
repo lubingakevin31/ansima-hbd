@@ -5,7 +5,7 @@
    ============================================================ */
 :root{
   --white:#fff;--ink:#111;--muted:#555;--line:#11111924;--line2:#11111940;
-  --choc:#4b2e22;--choc2:#33201a;--red:#c0212f;--red-d:#9c1a26;--green:#1f7a4d;--green-l:#e6f3ec;--sky:#2e8fc7;
+  --choc:#4b2e22;--choc2:#33201a;--red:#c0212f;--red-d:#9c1a26;--red-l:#ff7782;--green:#1f7a4d;--green-l:#e6f3ec;--sky:#8fd0f2;--sky-d:#2e8fc7;
   --f-script:'Great Vibes',cursive;--f-hand:'Caveat',cursive;--f-serif:'Lora',Georgia,serif;
   --f-sans:'Inter',system-ui,sans-serif;--f-edit:'Cormorant Garamond',Georgia,serif;
 }
@@ -97,7 +97,7 @@ header nav a:hover{border-color:var(--red)}
 .facts span{font-size:.78rem;opacity:.85}
  
 /* ---------- Layout helpers ---------- */
-.photo{position:relative;margin:0;aspect-ratio:3/4;background:#f1eeea;border:1px solid var(--line);overflow:hidden;border-radius:2px}
+.photo{position:relative;margin:0;aspect-ratio:var(--ar,3/4);background:#f1eeea;border:1px solid var(--line);overflow:hidden;border-radius:2px}
 .photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
 .photo.nofile{display:grid;place-items:center;color:var(--muted);font-size:.78rem}
 .photo.nofile::after{content:'Add ' attr(data-file);padding:12px;text-align:center}
@@ -164,7 +164,7 @@ button.tag:hover{border-color:var(--ink);transform:translateY(-2px)}
 .year{display:block;font:600 clamp(4.4rem,11vw,9.5rem)/.85 var(--f-edit);color:transparent;-webkit-text-stroke:1.5px var(--choc);letter-spacing:-.02em}
 .ctitle{margin:14px 0 4px;font:500 1.9rem/1.1 var(--f-hand);color:var(--red)}
 .ctext{margin:0;max-width:34ch;font:400 1rem/1.7 var(--f-serif);color:var(--muted);display:inline-block}
-.ph{margin:0;position:relative;aspect-ratio:4/5;max-width:380px;width:100%;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;border-radius:2px;justify-self:start}
+.ph{margin:0;position:relative;aspect-ratio:var(--ar,4/5);max-width:380px;width:100%;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;border-radius:2px;justify-self:start}
 .chap:nth-child(even) .ph{justify-self:end}
 .ph img{position:absolute;left:8px;top:8px;width:calc(100% - 16px);height:calc(100% - 38px);object-fit:cover;object-position:50% 20%;display:block}
 .ph.nofile{display:grid;place-items:center;color:var(--muted);font-size:.78rem}
@@ -360,4 +360,82 @@ main{overflow-x:clip}
 @media(prefers-reduced-motion:reduce){
   .photoband::before,.photoband::after,.finale::before,.finale::after,.sec::before,.photo::before,.ph::before{display:none}
   .rv-l,.rv-r{transform:none}
+}
+ 
+/* ============================================================
+   Colours: white · chocolate · black · sky blue · red
+   Motion borrowed from the first design: drifting glows, floating chips,
+   orbit ring, bouncing cake, lifting cards
+   ============================================================ */
+html{overflow-x:clip}
+body{overflow-x:clip}
+.g>*{min-width:0}
+h1,h2,h3,p,li,.chap,.card{overflow-wrap:anywhere}
+ 
+.glow{position:fixed;width:min(60vw,320px);height:min(60vw,320px);border-radius:50%;filter:blur(90px);opacity:.2;pointer-events:none;z-index:-1;animation:drift 14s ease-in-out infinite alternate;will-change:transform}
+.g1{background:var(--sky);top:12%;left:-120px}
+.g2{background:var(--red);right:-120px;bottom:6%;animation-delay:-5s;opacity:.12}
+@keyframes drift{to{transform:translate(70px,-50px) scale(1.2)}}
+ 
+/* coloured sections */
+#wish.sky,#story.sky{background:var(--sky);border:0}
+#surprises.dark{background:var(--choc);color:#fff;border:0}
+.sky .eyebrow{color:var(--red-d)}
+.sky .muted{color:#13202b}
+.dark .eyebrow{color:var(--red-l)}
+.dark .h2{color:#fff}
+.dark .muted{color:#ecdcd2}
+.dark .lockbox{border-color:#ffffff55;color:#ecdcd2}
+.dark .tag{border-color:#ffffff30}
+.sky .wishmsg{color:var(--choc2)}
+.sec.sky::before,.sec.dark::before{background:#fff;box-shadow:0 0 14px 2px #ffffffaa}
+.sky .btn.primary{background:var(--ink)}
+.sky .btn.primary:hover{background:var(--choc)}
+.becoming{background:var(--ink);color:#fff;padding:clamp(36px,6vw,72px) clamp(20px,5vw,60px);border-radius:3px}
+.becoming cite{color:#c9c9c9}
+.becoming .script{color:var(--red-l)}
+.year{-webkit-text-stroke-color:var(--choc)}
+.chap::after{background:var(--red);border-color:var(--sky)}
+ 
+/* floating chips on the hero photo */
+.chip{position:absolute;z-index:2;padding:11px 14px;background:#fff;color:var(--ink);border-radius:3px;box-shadow:0 12px 30px #11111140;font-size:.74rem;font-weight:600;letter-spacing:.04em;animation:chip 5s ease-in-out infinite}
+.chip.c1{top:26%;right:9%;border-left:4px solid var(--red)}
+.chip.c2{bottom:20%;right:22%;border-left:4px solid var(--sky-d);animation-delay:-2s}
+@keyframes chip{50%{translate:0 -9px}}
+ 
+/* orbit ring + bouncing cake */
+.cakewrap{position:relative}
+.orbit{position:absolute;inset:2% 6%;border:1px dashed #11111155;border-radius:50%;animation:spin 40s linear infinite;pointer-events:none}
+.orbit::before,.orbit::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%}
+.orbit::before{top:10%;left:18%;background:var(--red)}
+.orbit::after{right:6%;bottom:26%;background:#fff;border:2px solid var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cake-svg{position:relative;animation:bounce 4s ease-in-out infinite}
+@keyframes bounce{50%{transform:translateY(-8px) rotate(-1deg)}}
+ 
+/* cards lift like the first design */
+.card,.tag,.ph,.photo{transition:transform .35s,box-shadow .35s}
+button.tag:hover{transform:translateY(-6px)}
+ 
+/* splash: landscape photos fill the screen instead of sitting on a blurred copy */
+@media(min-aspect-ratio:1/1){
+  .splash.land::before{display:none}
+  .splash.land .splash-photo{inset:-5%;background:url(../images/a.jpeg) 50% 20%/cover no-repeat,var(--choc)}
+}
+@media(max-width:640px){
+  .chip{font-size:.66rem;padding:8px 10px}
+  .chip.c1{top:auto;bottom:70px;right:12px}
+  .chip.c2{bottom:18px;left:12px;right:auto}
+  .orbit{inset:0}
+  .glow{opacity:.14}
+}
+@media(prefers-reduced-motion:reduce){.glow,.chip,.orbit,.cake-svg{animation:none}}
+ 
+.facts{flex-wrap:nowrap}
+@media(max-width:640px){
+  .facts li{padding-right:14px;margin-right:14px}
+  .facts li+li{padding-left:14px}
+  .facts b{font-size:1.7rem}
+  .bc-lock{bottom:8px;left:6px;right:6px;font-size:.6rem;padding:5px 6px}
+  .g-story .bc-sub{margin-bottom:34px}
 }

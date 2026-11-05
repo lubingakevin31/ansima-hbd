@@ -25,6 +25,9 @@ async function runSplash() {
   const lines = C.splashLines, box = $('#splashText'), photo = $('#splashPhoto'), shade = $('#splashShade'), btn = $('#enterBtn');
   const total = lines.join('').length;
   let typed = 0;
+  const probe = new Image();
+  probe.onload = () => { if (probe.naturalWidth >= probe.naturalHeight) $('#splash').classList.add('land'); };
+  probe.src = 'assets/images/a.jpeg';
   const els = lines.map((t, i) => {
     const p = document.createElement('p');
     p.className = 'sline sl-' + i;
@@ -281,6 +284,20 @@ function buildYears() {
   $('#yEnd').textContent = C.yearsEnd;
 }
  
+/* Each frame follows the real shape of its photo (portrait, square or landscape), within sensible limits */
+function fitImages() {
+  $$('.photo img, .ph img').forEach(img => {
+    const apply = () => {
+      if (!img.naturalWidth || !img.parentElement) return;
+      const fig = img.parentElement;
+      const [lo, hi] = fig.classList.contains('arch') ? [0.7, 0.95] : fig.classList.contains('ph') ? [0.75, 1.25] : [0.66, 1.4];
+      const r = Math.max(lo, Math.min(hi, img.naturalWidth / img.naturalHeight));
+      fig.style.setProperty('--ar', r.toFixed(3));
+    };
+    img.complete ? apply() : img.addEventListener('load', apply, { once: true });
+  });
+}
+ 
 function wireImages() {
   $$('.photo img, .ph img').forEach(img => {
     const bad = () => { const par = img.parentElement; if (!par) return; par.classList.add('nofile'); img.remove(); };
@@ -466,6 +483,7 @@ buildBunting();
 buildCake();
 buildYears();
 wireImages();
+fitImages();
 renderGame();
 refreshLocks();
 runSplash();

@@ -1,360 +1,188 @@
-/* ============================================================
-   RÉGLAGES — modifie ici le nombre de fichiers et les réponses
-   ============================================================ */
-const CONFIG = {
-  videos: 7,          // assets/videos/video-01.mp4 … video-07.mp4
-  audios: 5,          // assets/audio/audio-01.mp3 … audio-05.mp3
-  photos: 7,          // assets/images/photo-01.jpg … photo-07.jpg
-  winsForVault: 3,    // victoires nécessaires pour ouvrir photos + lettre
-  guessAnswer: 'bougie'
-};
-const STORAGE_KEY = 'ansima-hbd-v1';
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#4b2e22">
+  <title>Joyeux anniversaire, Ansima</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="locked">
 
-/* ============================================================
-   OUTILS
-   ============================================================ */
-const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-const pad = n => String(n).padStart(2, '0');
-const shuffle = a => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+  <!-- Écran de démarrage -->
+  <div class="splash" id="splash">
+    <div class="splash-photo" id="splashPhoto"></div>
+    <div class="splash-shade" id="splashShade"></div>
+    <div class="splash-ui">
+      <button class="skip" id="skip">Passer</button>
+      <div class="splash-text" id="splashText" aria-live="polite"></div>
+      <button class="btn primary enter" id="enterBtn">Entrer dans l'aventure</button>
+    </div>
+  </div>
 
-const dialog = $('#dialog'), body = $('#gameBody'), feedback = $('#feedback');
+  <!-- Vidéo d'introduction -->
+  <div class="introv" id="introv" role="dialog" aria-modal="true">
+    <div class="introbox">
+      <video id="bdayVideo" src="assets/videos/1.mp4" preload="auto" playsinline controls></video>
+      <div class="introbar">
+        <span id="introHint">Installe-toi confortablement et profite de ta vidéo.</span>
+        <button class="btn primary" id="introGo">Continuer</button>
+      </div>
+    </div>
+  </div>
 
-function toast(s) {
-  const t = $('#toast');
-  t.textContent = s;
-  t.classList.add('show');
-  clearTimeout(toast.id);
-  toast.id = setTimeout(() => t.classList.remove('show'), 2800);
-}
+  <header>
+    <a class="brand" href="#home">Ansima<span> · 05.11</span></a>
+    <nav aria-label="Navigation">
+      <a href="#game">Épreuves</a><a href="#surprises">Trésors</a><a href="#story">Histoire</a>
+    </nav>
+  </header>
 
-function confetti(n = 80) {
-  const layer = $('#confettiLayer'), colors = ['#cf2a3a', '#4b2e22', '#1f9d55', '#8fd3f4', '#ffffff', '#0f1a24'];
-  for (let i = 0; i < n; i++) {
-    const p = document.createElement('i');
-    p.className = 'confetti';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.animationDelay = Math.random() + 's';
-    layer.append(p);
-    setTimeout(() => p.remove(), 4200);
-  }
-}
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <svg class="bunting" id="bunting" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="wrap hero-in">
+        <p class="eyebrow rv">5 Novembre · Jour spécial</p>
+        <h1 class="rv" style="--d:.1s">Joyeux anniversaire,<span class="script">Ansima</span></h1>
+        <p class="lead rv" style="--d:.2s">Des épreuves à relever, des surprises cachées dans des boîtes mystères, et une histoire écrite spécialement pour toi. Relève les défis pour tout débloquer !</p>
+        <div class="actions rv" style="--d:.3s">
+          <a class="btn primary" href="#game">Commencer les épreuves</a>
+          <a class="btn ghost light" href="#wish">Faire un vœu</a>
+        </div>
+        <ul class="facts rv" style="--d:.4s">
+          <li><b>7</b><span>épreuves</span></li>
+          <li><b data-fill="items">16</b><span>surprises</span></li>
+          <li><b>∞</b><span>sourires</span></li>
+        </ul>
+      </div>
+    </section>
 
-/* ============================================================
-   CADEAUX : 7 vidéos + 5 audios mélangés
-   ============================================================ */
-const MEDIA = [];
-for (let i = 1; i <= CONFIG.videos; i++) MEDIA.push({ id: 'v' + pad(i), type: 'video', n: i, src: `assets/videos/video-${pad(i)}.mp4` });
-for (let i = 1; i <= CONFIG.audios; i++) MEDIA.push({ id: 'a' + pad(i), type: 'audio', n: i, src: `assets/audio/audio-${pad(i)}.mp3` });
-const byId = id => MEDIA.find(m => m.id === id);
+    <!-- Le Gâteau & Vœu -->
+    <section class="sec tint" id="wish">
+      <div class="wrap g g-wish">
+        <div class="cakewrap rv rv-l" id="cakewrap">
+          <svg class="cake-svg" id="cake" viewBox="0 0 320 300" role="img" aria-label="Gâteau d'anniversaire">
+            <ellipse cx="160" cy="276" rx="150" ry="14" fill="#e9e5df"/>
+            <ellipse cx="160" cy="270" rx="132" ry="10" fill="#fff"/>
+            <rect x="48" y="172" width="224" height="96" rx="12" fill="#4b2e22"/>
+            <rect x="48" y="172" width="224" height="26" rx="12" fill="#fff"/>
+            <g fill="#fff"><circle cx="62" cy="196" r="14"/><circle cx="90" cy="196" r="14"/><circle cx="118" cy="196" r="14"/><circle cx="146" cy="196" r="14"/><circle cx="174" cy="196" r="14"/><circle cx="202" cy="196" r="14"/><circle cx="230" cy="196" r="14"/><circle cx="258" cy="196" r="14"/></g>
+            <rect x="88" y="110" width="144" height="66" rx="12" fill="#6b4231"/>
+            <rect x="88" y="110" width="144" height="22" rx="11" fill="#fff"/>
+            <g id="candles"></g>
+          </svg>
+        </div>
+        <div class="hd rv rv-r">
+          <p class="eyebrow">01 · Tradition</p>
+          <h2 class="h2">Ferme les yeux<br>et fais un vœu.</h2>
+        </div>
+        <div class="bd rv rv-r">
+          <p class="muted">Cinq bougies, un souffle magique. Clique sur le gâteau pour souffler les bougies et garder ton vœu secret.</p>
+          <button class="btn primary" id="blow" aria-pressed="false">Souffler les bougies</button>
+          <p class="wishmsg hand" id="wishMsg" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
 
-/* ============================================================
-   ÉTAT (sauvegardé dans le navigateur)
-   ============================================================ */
-let state = { wins: [], opened: [], pending: 0, order: [] };
-try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if (saved && Array.isArray(saved.wins)) state = Object.assign(state, saved);
-} catch (e) { /* stockage indisponible : on continue en mémoire */ }
-// Ordre d'affichage mélangé une fois pour toutes : on ne devine pas le type d'après la position
-if (state.order.length !== MEDIA.length) state.order = shuffle(MEDIA.map(m => m.id));
-const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} };
+    <!-- Zone de jeu / Épreuves -->
+    <section class="sec" id="game">
+      <div class="wrap g g-game">
+        <figure class="photo frame rv rv-l" data-file="d.jpeg"><img loading="lazy" src="assets/images/d.jpeg" alt="Ansima"></figure>
+        <div class="hd rv rv-r">
+          <p class="eyebrow">02 · Les épreuves</p>
+          <h2 class="h2">Relève les défis.</h2>
+        </div>
+        <div class="card rv" id="gameCard" aria-live="polite"></div>
+      </div>
+    </section>
 
-/* ============================================================
-   AFFICHAGE : progression, coffre, collection
-   ============================================================ */
-function refresh() {
-  const w = state.wins.length, remaining = MEDIA.length - state.opened.length;
+    <!-- Coffre des surprises -->
+    <section class="sec tint" id="surprises">
+      <div class="wrap">
+        <div class="rv rv-r">
+          <p class="eyebrow">03 · Trésors cachés</p>
+          <h2 class="h2">Vidéos &amp; messages audio.</h2>
+          <p class="muted" id="vaultNote"></p>
+        </div>
+        <div class="tags" id="tagGrid"></div>
+      </div>
+    </section>
 
-  $('#progress').style.width = (w / 5 * 100) + '%';
-  $('#count').textContent = `${w} / 5 épreuves gagnées`;
-  $('#status').textContent = w >= CONFIG.winsForVault ? 'COFFRE OUVERT' : 'VERROUILLÉ';
-  $('#giftCount').textContent = `${state.opened.length} / ${MEDIA.length}`;
+    <!-- Histoire / Livre -->
+    <section class="sec" id="story">
+      <div class="wrap g g-story">
+        <div class="hd rv rv-l">
+          <p class="eyebrow">04 · L'histoire</p>
+          <h2 class="h2">Un livre ouvert<br>rien que pour toi.</h2>
+        </div>
+        <figure class="photo passe rv rv-l" data-file="e.jpeg"><img loading="lazy" src="assets/images/e.jpeg" alt="Ansima"></figure>
+        <button class="bookcover rv rv-r" id="bookCard" aria-label="Ouvrir le livre">
+          <span class="bc-title">Ansima</span>
+          <span class="bc-sub">Une histoire pour ton anniversaire</span>
+          <span class="bc-lock" id="bookLock">Réponds à la première question pour déverrouiller</span>
+        </button>
+        <div class="bd rv rv-r">
+          <p class="muted">Tourne les pages, plonge dans les souvenirs et savoure chaque mot. Disponible en français et en anglais.</p>
+        </div>
+      </div>
+    </section>
 
-  $$('.game').forEach(g => {
-    const k = g.querySelector('[data-game]').dataset.game, won = state.wins.includes(k);
-    g.classList.toggle('won', won);
-    g.querySelector('.gstate').textContent = won ? '✓ gagnée' : 'à jouer';
-  });
+    <!-- Finale -->
+    <section class="photoband" data-split>
+      <div class="wrap"><p class="quote rv">Que cette nouvelle année te ressemble :<br>lumineuse, courageuse et pleine de joie.</p></div>
+    </section>
 
-  // Bouton principal de la carte cadeaux
-  const btn = $('#unlock'), txt = $('#unlockText');
-  if (state.pending > 0) {
-    btn.disabled = false;
-    btn.textContent = `Choisir ma boîte 🎁 (${state.pending})`;
-    txt.textContent = 'Une boîte mystère t’attend. Vidéo ou audio ? Tu le sauras en l’ouvrant.';
-  } else if (w > 0) {
-    btn.disabled = false;
-    btn.textContent = 'Voir mes cadeaux ✨';
-    txt.textContent = 'Réussis une autre épreuve pour gagner une nouvelle boîte.';
-  } else {
-    btn.disabled = true;
-    btn.textContent = 'Gagne une épreuve';
-    txt.textContent = 'Gagne une épreuve pour choisir ta première boîte.';
-  }
+    <section class="finale" data-split>
+      <div class="wrap">
+        <p class="script big rv">Joyeux anniversaire, Ansima.</p>
+        <p class="closing rv" id="closing"></p>
+        <a class="btn primary rv" href="#home">Retour en haut</a>
+      </div>
+    </section>
+  </main>
 
-  // Bonus final : toutes les épreuves gagnées -> on peut ouvrir le reste
-  $('#bonus').classList.toggle('hidden', !(w >= 5 && remaining > 0 && state.pending === 0));
-  $('#bonus').textContent = `Ouvrir les ${remaining} boîtes restantes 🎉`;
+  <footer>
+    <span>Ansima · 05.11.2026</span>
+    <a href="#home">Haut de page ↑</a>
+  </footer>
 
-  renderGifts();
+  <!-- Modale média -->
+  <dialog id="player" aria-labelledby="playerTitle">
+    <button class="close" id="playerClose" aria-label="Fermer">×</button>
+    <p class="eyebrow" id="playerKind"></p>
+    <h3 id="playerTitle"></h3>
+    <div id="playerBody"></div>
+  </dialog>
 
-  const vaultOpen = w >= CONFIG.winsForVault;
-  $$('[data-needs]').forEach(p => {
-    p.querySelector('.lockbox').classList.toggle('hidden', vaultOpen);
-    p.querySelector('.unlocked').classList.toggle('hidden', !vaultOpen);
-  });
-}
+  <dialog id="lightbox" class="lb" aria-label="Agrandissement photo">
+    <button class="close" id="lbClose" aria-label="Fermer">×</button>
+    <img id="lbImg" alt="">
+  </dialog>
 
-function renderGifts() {
-  const grid = $('#giftGrid');
-  grid.innerHTML = '';
-  state.order.forEach((id, idx) => {
-    const m = byId(id);
-    if (state.opened.includes(id)) {
-      const b = document.createElement('button');
-      b.className = 'gift open';
-      b.innerHTML = `<span>${m.type === 'video' ? '🎬' : '🎧'}</span>${m.type === 'video' ? 'Vidéo' : 'Audio'} ${pad(m.n)}`;
-      b.onclick = () => showMedia(m, false);
-      grid.append(b);
-    } else {
-      const d = document.createElement('div');
-      d.className = 'gift';
-      d.innerHTML = `<span>🎁</span>Mystère ${pad(idx + 1)}`;
-      grid.append(d);
-    }
-  });
-}
+  <!-- Lecteur de livre interactif -->
+  <div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="Le livre">
+    <div class="rbar">
+      <div class="lang" role="group" aria-label="Langue">
+        <button id="langFr" class="on">FR</button>
+        <button id="langEn">EN</button>
+      </div>
+      <button class="rclose" id="readerClose">Fermer ×</button>
+    </div>
+    <div class="stage" id="stage"><div class="bk" id="bk"></div></div>
+    <div class="rnav">
+      <button class="btn ghost light" id="prevPage">← Précédent</button>
+      <span id="pageInfo"></span>
+      <button class="btn ghost light" id="shutBook">Fermer la couverture</button>
+      <button class="btn primary" id="nextPage">Suivant →</button>
+    </div>
+  </div>
 
-/* ============================================================
-   VICTOIRE -> BOÎTE MYSTÈRE
-   ============================================================ */
-function win(k, msg) {
-  feedback.textContent = msg;
-  if (state.wins.includes(k)) {
-    feedback.textContent += ' (Épreuve déjà gagnée : pas de nouvelle boîte.)';
-    return;
-  }
-  state.wins.push(k);
-  state.pending++;
-  save();
-  refresh();
-  confetti(70);
-  if (state.wins.length === CONFIG.winsForVault) setTimeout(() => toast('Photos et lettre débloquées ! 🔓'), 600);
-  setTimeout(showReward, 1500);
-}
-
-function openDialog(kicker, title) {
-  $('#gameKicker').textContent = kicker;
-  $('#gameTitle').textContent = title;
-  feedback.textContent = '';
-  if (!dialog.open) dialog.showModal();
-}
-
-function showReward() {
-  if (state.pending <= 0) return;
-  openDialog('CADEAU MYSTÈRE', 'Choisis une boîte');
-  body.innerHTML = `<p>Bravo ! Trois boîtes, un cadeau à l’intérieur : une vidéo ou un audio. À toi de choisir.</p>
-    <div class="giftrow">
-      <button class="giftbox" aria-label="Boîte 1">🎁</button>
-      <button class="giftbox" aria-label="Boîte 2">🎀</button>
-      <button class="giftbox" aria-label="Boîte 3">🎊</button>
-    </div>`;
-  $$('.giftbox').forEach(b => b.onclick = pickGift);
-}
-
-function pickGift() {
-  const left = MEDIA.filter(m => !state.opened.includes(m.id));
-  if (!left.length) { body.innerHTML = '<p>Tous les cadeaux ont déjà été ouverts. 💗</p>'; return; }
-  const m = left[Math.floor(Math.random() * left.length)];
-  state.opened.push(m.id);
-  state.pending = Math.max(0, state.pending - 1);
-  save();
-  refresh();
-  showMedia(m, true);
-}
-
-function showMedia(m, fresh) {
-  const isVideo = m.type === 'video';
-  openDialog(fresh ? 'TON CADEAU MYSTÈRE' : 'SOUVENIR', isVideo ? `Vidéo ${pad(m.n)}` : `Message audio ${pad(m.n)}`);
-  body.innerHTML = '<div class="media-reveal"></div>';
-  const box = body.firstElementChild;
-  if (fresh) box.insertAdjacentHTML('beforeend', `<p>${isVideo ? 'C’était une vidéo ! 🎬' : 'C’était un message audio ! 🎧'}</p>`);
-  if (!isVideo) box.insertAdjacentHTML('beforeend', '<div class="bigicon">🎧</div>');
-
-  const el = document.createElement(m.type);
-  el.controls = true;
-  el.preload = 'metadata';
-  el.src = m.src;
-  if (isVideo) el.playsInline = true;
-  el.onerror = () => {
-    el.replaceWith(Object.assign(document.createElement('div'), {
-      className: 'missing',
-      textContent: `Fichier introuvable : ${m.src}. Ajoute-le dans le dossier du site.`
-    }));
-  };
-  box.append(el);
-  if (fresh) el.play().catch(() => {});
-
-  if (fresh && state.pending > 0) {
-    const more = document.createElement('button');
-    more.className = 'primary';
-    more.textContent = `Ouvrir une autre boîte (${state.pending})`;
-    more.onclick = showReward;
-    box.append(more);
-  }
-}
-
-/* ============================================================
-   LES 5 ÉPREUVES
-   ============================================================ */
-const LABELS = {
-  quiz: 'ÉPREUVE 01 · QCM', riddle: 'ÉPREUVE 02 · ÉNIGME', guess: 'ÉPREUVE 03 · DEVINETTE',
-  memory: 'ÉPREUVE 04 · MÉMOIRE', lucky: 'ÉPREUVE 05 · HASARD'
-};
-
-function answers(k, list, okMsg, badMsg) {
-  $$('.answer').forEach(b => b.onclick = () => {
-    if (b.dataset.ok === '1') {
-      b.classList.add('correct');
-      $$('.answer').forEach(x => x.disabled = true);
-      win(k, okMsg);
-    } else {
-      b.classList.add('wrong');
-      feedback.textContent = badMsg;
-    }
-  });
-}
-
-function openGame(k) {
-  openDialog(LABELS[k], 'Prête ?');
-
-  if (k === 'quiz') {
-    $('#gameTitle').textContent = 'Question pour une championne';
-    body.innerHTML = `<p>Quelle est la meilleure façon de célébrer une personne exceptionnelle ?</p>
-      <div class="answers">
-        <button class="answer" data-ok="0">Faire comme si c’était un lundi normal 😴</button>
-        <button class="answer" data-ok="1">Lui rappeler qu’elle mérite plein de bonheur 💗</button>
-        <button class="answer" data-ok="0">Lui donner des devoirs supplémentaires 📚</button>
-        <button class="answer" data-ok="0">Annuler le gâteau. Jamais ! 🎂</button>
-      </div>`;
-    answers(k, null, 'Bonne réponse ! Badge « reine du jour » débloqué 👑', 'Mauvaise réponse… essaie encore 😏');
-  }
-
-  if (k === 'riddle') {
-    $('#gameTitle').textContent = 'L’énigme du gâteau';
-    body.innerHTML = `<p>Je grandis chaque année, mais je ne suis pas un arbre. On me célèbre avec des bougies, mais je ne suis pas une fête nationale. Qui suis-je ?</p>
-      <div class="answers">
-        <button class="answer" data-ok="0">Un volcan 🌋</button>
-        <button class="answer" data-ok="1">Un anniversaire 🎂</button>
-        <button class="answer" data-ok="0">Une connexion Wi-Fi 📶</button>
-      </div>`;
-    answers(k, null, 'Exact ! Ton cerveau est en mode fête 🧠✨', 'Pas tout à fait… relis bien l’énigme !');
-  }
-
-  if (k === 'guess') {
-    $('#gameTitle').textContent = 'Qui suis-je ?';
-    body.innerHTML = `<p>Indice 1 : je peux être soufflé, mais je ne suis pas le vent.<br>Indice 2 : plus il y en a, plus la fête est jolie.<br>Indice 3 : on me place sur le gâteau. 🕯️</p>
-      <input class="gameinput" id="guessInput" placeholder="Ta réponse…" autocomplete="off">
-      <button class="primary" id="checkGuess">Valider ma réponse</button>`;
-    const check = () => {
-      const v = $('#guessInput').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-      v.includes(CONFIG.guessAnswer)
-        ? win(k, 'Bien deviné ! Part de gâteau virtuelle 🍰')
-        : (feedback.textContent = 'Indice bonus : on les allume avant de souffler… 😉');
-    };
-    $('#checkGuess').onclick = check;
-    $('#guessInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
-  }
-
-  if (k === 'memory') {
-    $('#gameTitle').textContent = 'Retrouve les paires';
-    const cards = shuffle(['🎂', '💗', '🎁', '🌸', '🎉', '⭐', '🎂', '💗', '🎁', '🌸', '🎉', '⭐']);
-    body.innerHTML = `<p>Retourne les cartes et retrouve les 6 paires. C’est plus facile que de résister au gâteau.</p>
-      <div class="memoryboard">${cards.map((e, i) => `<button class="memorycard" data-i="${i}" data-e="${e}" aria-label="Carte ${i + 1}">?</button>`).join('')}</div>
-      <p id="score">Paires trouvées : 0 / 6</p>`;
-    const cs = $$('.memorycard');
-    let opened = [], matched = 0, busy = false;
-    cs.forEach(c => c.onclick = () => {
-      if (busy || c.classList.contains('matched') || opened.includes(c)) return;
-      c.textContent = c.dataset.e;
-      opened.push(c);
-      if (opened.length < 2) return;
-      const [a, b] = opened;
-      if (a.dataset.e === b.dataset.e) {
-        a.classList.add('matched'); b.classList.add('matched');
-        opened = []; matched++;
-        $('#score').textContent = `Paires trouvées : ${matched} / 6`;
-        if (matched === 6) win(k, 'Mémoire légendaire ! Toutes les paires retrouvées 🏆');
-      } else {
-        busy = true;
-        setTimeout(() => { a.textContent = '?'; b.textContent = '?'; opened = []; busy = false; }, 650);
-      }
-    });
-  }
-
-  if (k === 'lucky') {
-    $('#gameTitle').textContent = 'La roue des surprises';
-    body.innerHTML = `<p>La roue a quelque chose à te dire. Fais-la tourner et découvre ton message du jour.</p>
-      <div id="wheel" aria-hidden="true">✦</div>
-      <div class="center"><button class="primary" id="spin">Faire tourner la roue</button></div>`;
-    let turn = 0;
-    $('#spin').onclick = () => {
-      turn++;
-      $('#wheel').style.transform = `rotate(${turn * 720 + Math.random() * 360}deg)`;
-      $('#spin').disabled = true;
-      setTimeout(() => {
-        const msgs = ['Tu mérites une journée magique ✨', 'Un beau souvenir t’attend bientôt 📸', 'Ton sourire est obligatoire 😁', 'Une pluie de bonnes nouvelles arrive 🌸', 'Tu es la star de cette mission 👑', 'Garde une part de gâteau 🍰'];
-        win(k, 'La roue a parlé : ' + msgs[Math.floor(Math.random() * msgs.length)]);
-        $('#spin').disabled = false;
-      }, 2000);
-    };
-  }
-}
-
-/* ============================================================
-   COLLAGE PHOTO : 7 emplacements, ordre / tailles / angles aléatoires
-   ============================================================ */
-function buildCollage() {
-  const ratios = shuffle(['3/4', '1/1', '4/5', '4/3', '2/3', '1/1', '3/4']);
-  const order = shuffle(Array.from({ length: CONFIG.photos }, (_, i) => i + 1));
-  order.forEach((num, i) => {
-    const n = pad(num), el = document.createElement('figure');
-    el.className = 'frame';
-    el.style.aspectRatio = ratios[i % ratios.length];
-    el.style.setProperty('--tilt', ((Math.random() * 4 - 2)).toFixed(1) + 'deg');
-    el.innerHTML = `<span class="symbol">✧</span><small>Photo ${n}<br>assets/images/photo-${n}.jpg</small>`;
-    const img = new Image();
-    img.alt = `Souvenir ${n}`;
-    img.onload = () => { el.innerHTML = ''; el.append(img); };
-    img.src = `assets/images/photo-${n}.jpg`;
-    $('#photoGrid').append(el);
-  });
-}
-
-/* ============================================================
-   ÉVÉNEMENTS
-   ============================================================ */
-$$('[data-game]').forEach(b => b.onclick = () => openGame(b.dataset.game));
-$('#close').onclick = () => dialog.close();
-dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
-dialog.addEventListener('close', () => { body.innerHTML = ''; feedback.textContent = ''; }); // arrête les médias en cours
-
-$('#start').onclick = () => $('#games').scrollIntoView({ behavior: 'smooth' });
-$('#unlock').onclick = () => state.pending > 0 ? showReward() : $('#vault').scrollIntoView({ behavior: 'smooth' });
-$('#bonus').onclick = () => {
-  MEDIA.forEach(m => { if (!state.opened.includes(m.id)) state.opened.push(m.id); });
-  save(); refresh(); confetti(160);
-  toast('Toutes les boîtes sont ouvertes ! 🎉');
-  $('#vault').scrollIntoView({ behavior: 'smooth' });
-};
-$$('.tabs button').forEach(b => b.onclick = () => {
-  $$('.tabs button').forEach(x => x.classList.toggle('active', x === b));
-  $$('.panel').forEach(p => p.classList.toggle('active', p.id === b.dataset.tab));
-});
-$('#confetti').onclick = () => { confetti(150); toast('Vœux de bonheur envoyés dans l’univers 💗'); };
-$('#sound').onclick = () => toast('Le site est silencieux : les audios sont dans tes cadeaux mystère.');
-
-buildCollage();
-refresh();
+  <script src="assets/js/content.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
