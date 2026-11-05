@@ -3,18 +3,18 @@
    ============================================================ */
 const CONTENT = {
   name: 'Ansima',
-
+ 
   /* Opening screen: typed from left to right while the photo blurs */
   splashLines: [
     'You are a special person.',
     'This is made for you: friend, reader, coder, musician… whatever you choose to be, you do it with quality.',
     'Ansima, we love you very much.'
   ],
-
+ 
   /* Surprise files.  Videos: assets/videos/a.mp4 … f.mp4   Audios: assets/audio/a.mp3 … j.mp3  (lowercase) */
   videos: 'abcdef',
   audios: 'abcdefghij',
-
+ 
   /* The game: 7 questions. type "choice" = options + answer (index), type "text" = answers (accepted words) */
   questions: [
     { type: 'choice', q: 'Which of these is a programming language?', options: ['Marble', 'Python', 'Falsetto', 'Sonnet'], answer: 1, hint: 'Think about code, not poems or music.' },
@@ -25,7 +25,7 @@ const CONTENT = {
     { type: 'text', q: 'You can blow me out, but I am not the wind. I sit on top of the cake. What am I?', answers: ['candle', 'candles', 'a candle'], hint: 'One word. You light it before you make a wish.' },
     { type: 'choice', q: 'Final question. On which day do we celebrate Ansima?', options: ['5 October', '5 November', '15 November', '5 December'], answer: 1, hint: 'Look at the top of this page.' }
   ],
-
+ 
   /* Years section: a photo for each year, assets/images/2021.jpeg … 2026.jpeg */
   years: [
     { y: 2021, title: 'The girl you were', text: 'Quiet, curious, and already carrying a voice that made people stop and listen.' },
@@ -38,7 +38,7 @@ const CONTENT = {
   yearsQuote: 'One is not born, but rather becomes, a woman.',
   yearsQuoteBy: 'Simone de Beauvoir',
   yearsEnd: 'You are becoming her.',
-
+ 
   /* The book. Use **double stars** around words you want in bold. One string = one paragraph.
      Both languages must have the same number of paragraphs. */
   book: {
@@ -117,7 +117,8 @@ const CONTENT = {
       '**Parfois, c’est simplement le temps que nous avons passé auprès d’elle qui la rend irremplaçable.**'
     ]
   },
-
+ 
   /* Closing note on the last section */
   closing: 'May this new year bring you sincere reasons to laugh, people who take care of you, courage for your dreams, and memories you will still be telling for a long time. You deserve a day as bright as the energy you bring to the people around you. May God keep you, guide you, and give you peace, health and plenty of love.'
 };
+ 

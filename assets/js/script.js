@@ -6,7 +6,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+ 
 function toast(s) {
   let t = $('#toast');
   if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.append(t); }
@@ -15,12 +15,12 @@ function toast(s) {
   clearTimeout(toast.id);
   toast.id = setTimeout(() => t.classList.remove('show'), 2800);
 }
-
+ 
 /* ============================================================
    1. OPENING SCREEN: clear photo, then it blurs while the text is typed
    ============================================================ */
 let skip = false;
-
+ 
 async function runSplash() {
   const lines = C.splashLines, box = $('#splashText'), photo = $('#splashPhoto'), shade = $('#splashShade'), btn = $('#enterBtn');
   const total = lines.join('').length;
@@ -28,7 +28,7 @@ async function runSplash() {
   const els = lines.map((t, i) => {
     const p = document.createElement('p');
     p.className = 'sline sl-' + i;
-    p.innerHTML = `<span class="on"></span><span class="off">${esc(t)}</span>`;   // reserves space so nothing jumps
+    p.innerHTML = `<span class="on"></span><span class="off">${esc(t)}</span>`;   // reserves the space so nothing jumps
     box.append(p);
     return p;
   });
@@ -38,7 +38,7 @@ async function runSplash() {
     shade.style.opacity = (p * 0.72).toFixed(2);
   };
   look();
-  for (let t = 0; t < 28 && !skip && !reduceMotion; t++) await sleep(100);   // photo stays sharp briefly
+  for (let t = 0; t < 28 && !skip && !reduceMotion; t++) await sleep(100);   // the photo stays sharp for a moment
   if (reduceMotion) skip = true;
   for (let i = 0; i < lines.length && !skip; i++) {
     const on = els[i].querySelector('.on'), off = els[i].querySelector('.off'), chars = [...lines[i]];
@@ -56,7 +56,7 @@ async function runSplash() {
   typed = total; look();
   btn.classList.add('show');
 }
-
+ 
 function enterSite() {
   const splash = $('#splash');
   if (splash.classList.contains('leaving')) return;
@@ -70,7 +70,7 @@ function enterSite() {
   v.currentTime = 0;
   v.play().catch(() => {});
 }
-
+ 
 function leaveIntro() {
   $('#bdayVideo').pause();
   $('#introv').classList.remove('show');
@@ -78,26 +78,22 @@ function leaveIntro() {
   window.scrollTo(0, 0);
   startReveal();
 }
-
+ 
 /* ============================================================
-   2. REVEAL SCROLL AVANCÉ (Animations directionnelles, brillance & découpe)
+   2. SUBTLE REVEAL ON SCROLL
    ============================================================ */
 function startReveal() {
-  const targets = '.rv, .rv-left, .rv-right, .rv-shine, .split-curtain';
-  if (reduceMotion || !('IntersectionObserver' in window)) { 
-    $$(targets).forEach(e => e.classList.add('in')); 
-    return; 
-  }
+  if (reduceMotion || !('IntersectionObserver' in window)) { $$('.rv,.sec').forEach(e => e.classList.add('in')); $$('[data-split]').forEach(e => e.classList.add('open')); return; }
   const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { 
-      e.target.classList.add('in'); 
-      io.unobserve(e.target); 
-    }
-  }), { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
-  
-  $$(targets).forEach(el => io.observe(el));
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+  $$('.rv,.sec').forEach(el => io.observe(el));
+  const so = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('open'); so.unobserve(e.target); }
+  }), { threshold: 0.4 });
+  $$('[data-split]').forEach(el => so.observe(el));
 }
-
+ 
 /* ============================================================
    3. BIRTHDAY DETAILS: bunting + cake candles
    ============================================================ */
@@ -113,7 +109,7 @@ function buildBunting() {
   }
   $('#bunting').innerHTML = out;
 }
-
+ 
 function buildCake() {
   const xs = [112, 136, 160, 184, 208], cc = ['#c0212f', '#ffffff', '#2e8fc7', '#1f7a4d', '#c0212f'];
   $('#candles').innerHTML = xs.map((x, i) =>
@@ -129,7 +125,7 @@ function toggleCandles() {
   btn.setAttribute('aria-pressed', out);
   $('#wishMsg').textContent = out ? WISHES[Math.floor(Math.random() * WISHES.length)] : '';
 }
-
+ 
 /* ============================================================
    4. THE GAME: 7 questions, a random surprise after a right answer (optional)
    ============================================================ */
@@ -139,13 +135,13 @@ const ITEMS = [
   ...[...C.audios].map(l => ({ id: 'a' + l, type: 'audio', l, src: `assets/audio/${l}.mp3` }))
 ];
 const itemName = it => (it.type === 'video' ? 'Video ' : 'Voice message ') + it.l.toUpperCase();
-
+ 
 let st = { q: 0, answered: 0, opened: [], done: false };
 try { const s = JSON.parse(localStorage.getItem(STORAGE_KEY)); if (s && typeof s.q === 'number') st = Object.assign(st, s); } catch (e) {}
 const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(st)); } catch (e) {} };
 let phase = st.done ? 'done' : 'question';
 const played = () => st.answered > 0 || st.done;
-
+ 
 function makeMedia(it, autoplay) {
   const el = document.createElement(it.type);
   el.controls = true;
@@ -156,30 +152,30 @@ function makeMedia(it, autoplay) {
   if (autoplay) el.play().catch(() => {});
   return el;
 }
-
+ 
 function candles() {
   const lit = phase === 'done' ? Q.length : st.answered;
   return '<ol class="candles" aria-label="Progress">' + Q.map((_, i) => `<li class="${i < lit ? 'lit' : ''}"></li>`).join('') + '</ol>';
 }
-
+ 
 function renderGame(item) {
   const card = $('#gameCard'), last = st.q === Q.length - 1;
   const nextLabel = last ? 'Finish the game' : 'Next question';
-
+ 
   if (phase === 'done') {
     card.innerHTML = candles() + `<p class="big">You finished the game.</p><p class="muted">Every video and every voice message is now unlocked, and the story is open for you.</p>
       <div class="choices"><a class="btn primary" href="#surprises">See the surprises</a><button class="btn ghost" id="again">Play again</button></div>`;
     $('#again').onclick = () => { st.q = 0; st.answered = 0; phase = 'question'; save(); renderGame(); refreshLocks(); };
     return;
   }
-
+ 
   if (phase === 'choice') {
     card.innerHTML = candles() + `<p class="big">Correct.</p>
       <p class="muted">Would you like to open a surprise now? It will be a video or a voice message, chosen at random. You can also skip it and keep playing: at the end, you get to see everything.</p>
       <div class="choices"><button class="btn primary" id="openS">Open a surprise</button><button class="btn ghost" id="nextQ">${nextLabel}</button></div>`;
     $('#openS').onclick = () => {
       const pool = ITEMS.filter(i => !st.opened.includes(i.id));
-      const it = (pool.length ? pool : ITEMS)[Math.floor(Math.random() * (pool.length || ITEMS.length))];
+      const it = (pool.length ? pool : ITEMS)[Math.floor(Math.random() * (pool.length || ITEMS.length))];   // random: video or audio
       if (!st.opened.includes(it.id)) st.opened.push(it.id);
       save(); renderVault();
       phase = 'media'; renderGame(it);
@@ -187,7 +183,7 @@ function renderGame(item) {
     $('#nextQ').onclick = advance;
     return;
   }
-
+ 
   if (phase === 'media') {
     card.innerHTML = candles() + `<p class="qno">${item.type === 'video' ? 'A video' : 'A voice message'}</p><p class="big">Here is your surprise.</p>
       <div class="media-box"></div><div class="choices"><button class="btn primary" id="nextQ">${nextLabel}</button></div>`;
@@ -195,7 +191,7 @@ function renderGame(item) {
     $('#nextQ').onclick = advance;
     return;
   }
-
+ 
   const qq = Q[st.q];
   card.innerHTML = candles() + `<p class="qno">Question ${st.q + 1} of ${Q.length}</p><p class="qtext">${esc(qq.q)}</p>` +
     (qq.type === 'choice'
@@ -223,15 +219,15 @@ function renderGame(item) {
     $('#ans').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
   }
 }
-
+ 
 function advance() {
   if (st.q >= Q.length - 1) { st.done = true; phase = 'done'; }
   else { st.q++; phase = 'question'; }
   save(); renderGame(); renderVault(); refreshLocks();
   $('#gameCard').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
-
-/* ---------- Surprises: locked until played ---------- */
+ 
+/* ---------- Surprises: locked until she has played, everything at the end ---------- */
 const player = $('#player');
 function openItem(it) {
   $('#playerKind').textContent = it.type === 'video' ? 'Video' : 'Voice message';
@@ -239,10 +235,10 @@ function openItem(it) {
   $('#playerBody').replaceChildren(makeMedia(it, true));
   if (!player.open) player.showModal();
 }
-player.addEventListener('close', () => $('#playerBody').replaceChildren());
+player.addEventListener('close', () => $('#playerBody').replaceChildren());   // stops playback
 $('#playerClose').onclick = () => player.close();
 player.addEventListener('click', e => { if (e.target === player) player.close(); });
-
+ 
 function renderVault() {
   const grid = $('#tagGrid'), note = $('#vaultNote');
   grid.innerHTML = '';
@@ -264,40 +260,27 @@ function renderVault() {
     grid.append(b);
   });
 }
-
+ 
 function refreshLocks() {
   const ok = played();
   $('#bookCard').classList.toggle('locked', !ok);
   $('#bookCard').setAttribute('aria-disabled', !ok);
   renderVault();
 }
-
+ 
 /* ============================================================
-   5. YEARS (Génération avec animations croisées Gauche / Droite)
+   5. YEARS
    ============================================================ */
 function buildYears() {
-  $('#tl').innerHTML = C.years.map((y, i) => {
-    const leftAnim = i % 2 === 0 ? 'rv-left' : 'rv-right';
-    const rightAnim = i % 2 === 0 ? 'rv-right' : 'rv-left';
-    return `<article class="chap">
-      <div class="txt ${leftAnim}">
-        <span class="year">${y.y}</span>
-        <p class="ctitle">${esc(y.title)}</p>
-        <p class="ctext">${esc(y.text)}</p>
-      </div>
-      <figure class="ph ${rightAnim}" data-file="${y.y}.jpeg">
-        <img loading="lazy" decoding="async" src="assets/images/${y.y}.jpeg" alt="Ansima in ${y.y}">
-      </figure>
-    </article>`;
-  }).join('');
-  
+  $('#tl').innerHTML = C.years.map((y, i) => `<article class="chap rv ${i % 2 ? 'rv-r' : 'rv-l'}">
+    <div class="txt"><span class="year">${y.y}</span><p class="ctitle">${esc(y.title)}</p><p class="ctext">${esc(y.text)}</p></div>
+    <figure class="ph" data-file="${y.y}.jpeg"><img loading="lazy" decoding="async" src="assets/images/${y.y}.jpeg" alt="Ansima in ${y.y}"></figure>
+  </article>`).join('');
   $('#yq').textContent = '“' + C.yearsQuote + '”';
   $('#yqBy').textContent = C.yearsQuoteBy;
   $('#yEnd').textContent = C.yearsEnd;
-  
-  startReveal();
 }
-
+ 
 function wireImages() {
   $$('.photo img, .ph img').forEach(img => {
     const bad = () => { const par = img.parentElement; if (!par) return; par.classList.add('nofile'); img.remove(); };
@@ -305,13 +288,13 @@ function wireImages() {
     if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) bad();
   });
 }
-
+ 
 /* ============================================================
    6. THE BOOK: opens, turns pages, closes
    ============================================================ */
 const reader = $('#reader'), bk = $('#bk'), B = C.book;
 let lang = 'en', idx = 0, L = 0, cols = 2, maxIdx = 0, leaves = [], seqN = 0, pageCount = 0, token = 0;
-
+ 
 function tokens(raw) {
   const out = [];
   raw.split('**').forEach((seg, i) => seg.split(/\s+/).filter(Boolean).forEach(w => out.push({ w, b: i % 2 === 1 })));
@@ -322,7 +305,8 @@ function render(ts) {
   for (const t of ts) { const l = segs[segs.length - 1]; if (l && l.b === t.b) l.w.push(t.w); else segs.push({ b: t.b, w: [t.w] }); }
   return segs.map(s => s.b ? `<strong>${esc(s.w.join(' '))}</strong>` : esc(s.w.join(' '))).join(' ');
 }
-
+ 
+/* Splits the text into pages by measuring real page boxes */
 function paginate(paras) {
   const m = document.createElement('div');
   m.className = 'face measure';
@@ -337,7 +321,7 @@ function paginate(paras) {
     while (rest.length) {
       set([...cur, render(rest)]);
       if (fits()) { cur.push(render(rest)); rest = []; break; }
-      if (cur.length && rest.length < 40) { pages.push(cur); cur = []; continue; }
+      if (cur.length && rest.length < 40) { pages.push(cur); cur = []; continue; }   // short paragraph: start a new page
       let lo = 0, hi = rest.length - 1;
       while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); set([...cur, render(rest.slice(0, mid))]); fits() ? lo = mid : hi = mid - 1; }
       if (lo === 0) { if (cur.length) { pages.push(cur); cur = []; continue; } lo = 1; }
@@ -350,7 +334,7 @@ function paginate(paras) {
   m.remove();
   return pages;
 }
-
+ 
 function buildBook(targetFrac) {
   const single = innerWidth < 760;
   cols = single ? 1 : 2;
@@ -361,7 +345,7 @@ function buildBook(targetFrac) {
   bk.style.setProperty('--cols', cols);
   bk.style.setProperty('--fs', Math.max(12.5, Math.min(19, pw * 0.043)) + 'px');
   bk.innerHTML = '';
-
+ 
   const pages = paginate(B[lang]);
   pageCount = pages.length;
   const seq = [{ cls: 'cover', html: `<span class="bc-title">${esc(B.title)}</span><span class="bc-sub">${esc(B.subtitle)}</span>` }];
@@ -373,7 +357,7 @@ function buildBook(targetFrac) {
   const per = single ? 1 : 2;
   L = Math.ceil(seq.length / per);
   maxIdx = single ? L - 1 : L;
-
+ 
   bk.insertAdjacentHTML('beforeend', '<div class="base"></div>');
   leaves = [];
   for (let k = 0; k < L; k++) {
@@ -390,7 +374,7 @@ function buildBook(targetFrac) {
   update();
   requestAnimationFrame(() => requestAnimationFrame(() => { bk.style.transition = ''; }));
 }
-
+ 
 function update() {
   leaves.forEach((lf, i) => { lf.style.zIndex = i < idx ? i + 1 : 1000 - i; });
   bk.classList.toggle('shut-front', cols === 2 && idx === 0);
@@ -405,7 +389,7 @@ function update() {
   }
   $('#pageInfo').textContent = info;
 }
-
+ 
 async function goTo(n) {
   const my = ++token;
   n = Math.max(0, Math.min(maxIdx, n));
@@ -416,7 +400,7 @@ async function goTo(n) {
     if (idx !== n) await sleep(140);
   }
 }
-
+ 
 function openBook() {
   if (!played()) { toast('Answer your first question to unlock the story.'); return; }
   reader.classList.add('open');
@@ -430,7 +414,17 @@ function closeBook() {
   bk.innerHTML = '';
 }
 function rebuildKeep() { if (reader.classList.contains('open')) buildBook(maxIdx ? idx / maxIdx : 0); }
-
+ 
+/* photos open large */
+const lbox = $('#lightbox');
+document.addEventListener('click', e => {
+  const img = e.target.closest('.photo img, .ph img');
+  if (!img) return;
+  $('#lbImg').src = img.currentSrc || img.src; $('#lbImg').alt = img.alt; lbox.showModal();
+});
+$('#lbClose').onclick = () => lbox.close();
+lbox.addEventListener('click', e => { if (e.target === lbox) lbox.close(); });
+ 
 /* ============================================================
    7. EVENTS
    ============================================================ */
@@ -462,7 +456,7 @@ let tx = 0;
 $('#stage').addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
 $('#stage').addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 45) goTo(dx < 0 ? idx + 1 : idx - 1); }, { passive: true });
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(rebuildKeep, 250); });
-
+ 
 /* ============================================================
    8. START
    ============================================================ */
